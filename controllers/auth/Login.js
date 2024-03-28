@@ -8,18 +8,25 @@ async function login(req, res, next) {
   try {
     if (!email || !password) {
       return next(
-        res.json("Please provide email and password", StatusCodes.BAD_REQUEST)
+        res.status(StatusCodes.BAD_REQUEST).json({
+          message: "Please provide email and password",
+          success: false,
+        })
       );
     }
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json("email or password incorrect");
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email or password incorrect", success: false });
     }
     const isMatch = await user.isPasswordMatch(password);
     console.log(isMatch);
     if (!isMatch) {
-      return res.json("email or password incorrect", StatusCodes.BAD_REQUEST);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email or password incorrect", success: false });
     }
     const token = user.SignJwtToken();
     // console.log(token);
@@ -34,9 +41,12 @@ async function login(req, res, next) {
     };
     return res
       .cookie("token", token)
+      .status(StatusCodes.OK)
       .json({ success: true, message: "ok", payload });
   } catch (error) {
-    res.json(error.message, StatusCodes.BAD_REQUEST);
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json(error.message, StatusCodes.BAD_REQUEST);
   }
 }
 

@@ -10,7 +10,7 @@ const router = require("express").Router();
 
 router.route("/book").post(verifyToken, createTicket);
 router.route("/delete").delete([verifyToken], deleteTicket);
-router.route("/table").patch([verifyToken, isAdmin], findAll);
+router.route("/table").get([verifyToken, isAdmin], findAll);
 router.route("/cancel").patch([verifyToken], cancelTicket);
 
 module.exports = router;

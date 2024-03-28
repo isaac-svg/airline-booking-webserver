@@ -3,8 +3,8 @@ const ResponseError = require("../error");
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 async function isAdmin(req, res, next) {
-  const { username, password, isAdmin } = req.body;
   console.log("is author is hit");
+  console.log(req.user);
   if (!req.user.isAdmin) {
     return next(
       new ResponseError(
@@ -14,11 +14,17 @@ async function isAdmin(req, res, next) {
     );
   }
 
-  const user = await User.findOne({ username: username, isAdmin: true });
+  const user = await User.findOne({
+    email: req.user.email,
+    isAdmin: true,
+  });
 
   if (!user) {
     return next(
-      new Response("Username or password incorrect", StatusCodes.UNAUTHORIZED)
+      new ResponseError(
+        "Username or password incorrect",
+        StatusCodes.UNAUTHORIZED
+      )
     );
   }
   // const isMatch = await bcrypt.compare(password, user.password);

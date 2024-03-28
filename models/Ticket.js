@@ -28,7 +28,7 @@ const ticketSchema = new mongoose.Schema({
   isValid: {
     type: Boolean,
     required: true,
-    default: false,
+    default: true,
   },
   message: {
     type: String,

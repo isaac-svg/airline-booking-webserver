@@ -3,15 +3,18 @@ const ResponseError = require("../../middlewares/error");
 const Ticket = require("../../models/Ticket");
 
 async function cancelTicket(req, res, next) {
-  const { code, flightcode, username, email } = req.body;
+  const {
+    flightcode,
+
+    departureDate,
+    departureTime,
+    owner,
+  } = req.body;
   console.log(req.body, "request body");
   try {
     const newTicket = await Ticket.findOneAndUpdate(
       {
         flightcode,
-        username,
-        email,
-        code,
       },
       { isValid: false },
       { new: true }
